@@ -65,6 +65,14 @@ Measured 2026-11-05 with level-1-learn/run_learn.py on the Muse VM, Python 3.12.
 | Unit tests | 23 passed, plus the scaffold smoke test |
 | Determinism | results_learn.json identical across two runs (hash verified) |
 
+## Fan-out
+
+Written fan-out set for v1.0, in fanout/: blog post, tutorial,
+website page copy, LinkedIn post draft (DRAFT NOT POSTED),
+paper candidate brief, and release notes covering v0.1, v0.5,
+and v1.0. The full channel log and per-piece publicity grades
+are in PUBLICITY.md.
+
 ## Novelty
 
 PROPOSED. See NOVELTY.md. The novelty text is a draft until the Jev claim_check gate passes on it.
