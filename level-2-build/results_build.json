@@ -1,0 +1,131 @@
+{
+  "calibration": {
+    "int4_per_channel_packed": {
+      "W1": {
+        "calibration_logit_mse": 0.026969681103986766,
+        "clip_percentile": 100.0
+      },
+      "W2": {
+        "calibration_logit_mse": 0.019597577453583117,
+        "clip_percentile": 99.5
+      }
+    },
+    "int8_per_channel": {
+      "W1": {
+        "calibration_logit_mse": 6.357581825431516e-05,
+        "clip_percentile": 100.0
+      },
+      "W2": {
+        "calibration_logit_mse": 8.286926419772347e-05,
+        "clip_percentile": 100.0
+      }
+    }
+  },
+  "dataset": {
+    "calibration_samples": 200,
+    "kind": "synthetic Gaussian mixture, 4 classes, input dimension 16, centers seed 7 scale 0.6, noise std 1.0",
+    "test_samples": 400,
+    "train_samples": 800
+  },
+  "model": {
+    "architecture": "MLP 16-32-4, ReLU hidden, 676 parameters",
+    "initialization_seed": 42,
+    "training": "full-batch gradient descent, 60 epochs, learning rate 0.1, softmax cross entropy"
+  },
+  "rows": [
+    {
+      "logit_mse_vs_fp32": 7.30816304058772e-15,
+      "max_abs_weight_error": 2.9023292991148253e-08,
+      "mean_abs_weight_error": 5.318694594549221e-09,
+      "nonzero_parameters": 676,
+      "size_bytes": 3013,
+      "test_accuracy": 0.8825,
+      "test_correct": 353,
+      "test_total": 400,
+      "timing_ms_median": 0.25776700022106525,
+      "variant": "fp32"
+    },
+    {
+      "logit_mse_vs_fp32": 0.0002956580616008356,
+      "max_abs_weight_error": 0.005103368119379698,
+      "mean_abs_weight_error": 0.002292266870855778,
+      "size_bytes": 1248,
+      "test_accuracy": 0.8825,
+      "test_correct": 353,
+      "test_total": 400,
+      "timing_ms_median": 0.2577370000835799,
+      "variant": "int8_per_tensor"
+    },
+    {
+      "logit_mse_vs_fp32": 0.00012855537103276037,
+      "max_abs_weight_error": 0.0046097149687869265,
+      "mean_abs_weight_error": 0.0012674942494605497,
+      "size_bytes": 1388,
+      "test_accuracy": 0.8825,
+      "test_correct": 353,
+      "test_total": 400,
+      "timing_ms_median": 0.19482300012896303,
+      "variant": "int8_per_channel"
+    },
+    {
+      "logit_mse_vs_fp32": 0.045583055066125644,
+      "max_abs_weight_error": 0.08378411128615822,
+      "mean_abs_weight_error": 0.023948005514076227,
+      "size_bytes": 1081,
+      "test_accuracy": 0.8675,
+      "test_correct": 347,
+      "test_total": 400,
+      "timing_ms_median": 0.1926999998431711,
+      "variant": "int4_per_channel_packed"
+    },
+    {
+      "logit_mse_vs_fp32": 0.0994304653745515,
+      "max_abs_weight_error": 0.1333208515800323,
+      "mean_abs_weight_error": 0.018083068768891385,
+      "nonzero_parameters": 485,
+      "note": "NumPy magnitude pruning, labelled equivalent track. The TensorFlow Model Optimization Toolkit row did not run because TensorFlow is unavailable on this machine. Stored dense in FP32, so size equals FP32.",
+      "size_bytes": 3013,
+      "sparsity": 0.3,
+      "test_accuracy": 0.8725,
+      "test_correct": 349,
+      "test_total": 400,
+      "timing_ms_median": 0.25582400030543795,
+      "variant": "pruned_0.3"
+    },
+    {
+      "logit_mse_vs_fp32": 0.5332199252768538,
+      "max_abs_weight_error": 0.21812260860183602,
+      "mean_abs_weight_error": 0.052308303084349674,
+      "nonzero_parameters": 356,
+      "note": "NumPy magnitude pruning, labelled equivalent track. The TensorFlow Model Optimization Toolkit row did not run because TensorFlow is unavailable on this machine. Stored dense in FP32, so size equals FP32.",
+      "size_bytes": 3013,
+      "sparsity": 0.5,
+      "test_accuracy": 0.875,
+      "test_correct": 350,
+      "test_total": 400,
+      "timing_ms_median": 0.2600210000309744,
+      "variant": "pruned_0.5"
+    },
+    {
+      "logit_mse_vs_fp32": 1.9559350787117784,
+      "max_abs_weight_error": 0.34113609248485005,
+      "mean_abs_weight_error": 0.10604609372996836,
+      "nonzero_parameters": 229,
+      "note": "NumPy magnitude pruning, labelled equivalent track. The TensorFlow Model Optimization Toolkit row did not run because TensorFlow is unavailable on this machine. Stored dense in FP32, so size equals FP32.",
+      "size_bytes": 3013,
+      "sparsity": 0.7,
+      "test_accuracy": 0.7975,
+      "test_correct": 319,
+      "test_total": 400,
+      "timing_ms_median": 0.2538809999350633,
+      "variant": "pruned_0.7"
+    }
+  ],
+  "scenario": "Level 2 Build: 2-layer MLP (16-32-4, 676 parameters) trained with NumPy on a synthetic Gaussian mixture, quantized, pruned, serialized in QLAB format, and benchmarked on CPU",
+  "substitutions": [
+    "QLAB container format, designed for this project, is used instead of GGUF. QLAB is not GGUF and no file here runs in llama.cpp, which is unavailable on this machine.",
+    "The pruning rows are a NumPy equivalent track. The TensorFlow Model Optimization Toolkit row did not run because TensorFlow is unavailable on this machine.",
+    "No GPU was used. BlackBox was unreachable this cycle (NEEDS-BLACKBOX-ON). All timing is CPU timing on this machine."
+  ],
+  "timing_note": "timing_ms_median is the median of 15 full test-set forward passes on this machine (CPU, single machine, varying load), on dequantized weights for quantized variants. It is the only nondeterministic field in this file."
+}
