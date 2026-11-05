@@ -11,8 +11,16 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from quantize import (  # noqa: E402
-    build_task_samples, build_weight_matrix, error_metrics, evaluate_task,
-    flatten, pack_int4, quantize_symmetric, reshape, score_mae, size_bytes,
+    build_task_samples,
+    build_weight_matrix,
+    error_metrics,
+    evaluate_task,
+    flatten,
+    pack_int4,
+    quantize_symmetric,
+    reshape,
+    score_mae,
+    size_bytes,
 )
 
 
