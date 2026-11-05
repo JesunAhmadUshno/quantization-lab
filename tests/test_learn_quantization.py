@@ -6,9 +6,20 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "level-1-learn"))
 from quantize import (  # noqa: E402
-    QuantizationError, argmax_first, build_task_samples, build_weight_matrix,
-    error_metrics, evaluate_task, flatten, linear_scores, pack_int4,
-    quantize_symmetric, reshape, round_half_away, size_bytes, unpack_int4,
+    QuantizationError,
+    argmax_first,
+    build_task_samples,
+    build_weight_matrix,
+    error_metrics,
+    evaluate_task,
+    flatten,
+    linear_scores,
+    pack_int4,
+    quantize_symmetric,
+    reshape,
+    round_half_away,
+    size_bytes,
+    unpack_int4,
 )
 
 FLAT = [1.0, -0.5, 0.25, -0.5, 1.0, -0.25,
