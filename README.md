@@ -2,8 +2,8 @@
 
 Model optimization: INT8 and INT4, GGUF builds, a quality against size against speed study.
 
-Status: Learn DONE (2026-11-05, ROADMAP-V3-BATCH). Level 1 is built, tested, and measured below. Build and Deep are not started.
-Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. Learn was run on the Muse VM (CPU); see the level README for the named deduction.
+Status: Learn DONE and Build DONE (2026-11-05, ROADMAP-V3-BATCH). Deep is not started.
+Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. Learn and Build were run on the Muse VM (CPU); BlackBox was unreachable in the Build cycle (NEEDS-BLACKBOX-ON). See the level READMEs for the named deductions and substitutions: Build uses the QLAB container format designed for this project (not GGUF, no llama.cpp run), and its pruning rows are a NumPy equivalent track because TensorFlow was unavailable on the build machine.
 
 ## Start here
 
@@ -19,6 +19,22 @@ Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. Learn was run on the Mus
 - Level 3, Deep: benchmarks, optimization, evaluation, hard cases.
 
 ## Benchmarks
+
+### Build (Level 2)
+
+Measured 2026-11-05 with level-2-build/run_build.py on the Muse VM (CPU, Python 3.12, NumPy 1.26.4). The model is a 2-layer MLP (16-32-4, 676 parameters) trained with NumPy on a synthetic Gaussian mixture: train 800, calibration 200, held-out test 400. Sizes are serialized QLAB container bytes. Quality was measured with dequantized weights on CPU. Pruning rows are a NumPy equivalent track, not a TensorFlow result. Full method, failure modes, and grade (7,600 of 10,000) are in level-2-build/README.md. Learn is unchanged by Build.
+
+| Variant | Size bytes | Max abs weight error | Mean abs weight error | Test accuracy | Logit MSE vs FP32 | CPU time ms, median of 15 |
+| --- | --- | --- | --- | --- | --- | --- |
+| FP32 | 3013 | 0.000000 | 0.000000 | 353 of 400 (0.8825) | 0.000000 | 0.258 |
+| INT8 per-tensor (Learn method) | 1248 | 0.005103 | 0.002292 | 353 of 400 (0.8825) | 0.000296 | 0.258 |
+| INT8 per-channel, calibrated | 1388 | 0.004610 | 0.001267 | 353 of 400 (0.8825) | 0.000129 | 0.195 |
+| INT4 per-channel packed, calibrated | 1081 | 0.083784 | 0.023948 | 347 of 400 (0.8675) | 0.045583 | 0.193 |
+| Pruned 0.3 (NumPy equivalent) | 3013 | 0.133321 | 0.018083 | 349 of 400 (0.8725) | 0.099430 | 0.256 |
+| Pruned 0.5 (NumPy equivalent) | 3013 | 0.218123 | 0.052308 | 350 of 400 (0.8750) | 0.533220 | 0.260 |
+| Pruned 0.7 (NumPy equivalent) | 3013 | 0.341136 | 0.106046 | 319 of 400 (0.7975) | 1.955935 | 0.254 |
+
+### Learn (Level 1)
 
 Measured 2026-11-05 with level-1-learn/run_learn.py on the Muse VM, Python 3.12. The model is a deterministic 4 by 3 linear model, not a real model.
 
