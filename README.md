@@ -2,8 +2,8 @@
 
 Model optimization: INT8 and INT4, GGUF builds, a quality against size against speed study.
 
-Status: Learn DONE and Build DONE (2026-11-05, ROADMAP-V3-BATCH). Deep is not started.
-Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. Learn and Build were run on the Muse VM (CPU); BlackBox was unreachable in the Build cycle (NEEDS-BLACKBOX-ON). See the level READMEs for the named deductions and substitutions: Build uses the QLAB container format designed for this project (not GGUF, no llama.cpp run), and its pruning rows are a NumPy equivalent track because TensorFlow was unavailable on the build machine.
+Status: Learn DONE, Build DONE, and Deep DONE (2026-11-05, ROADMAP-V3-BATCH). v1.0 shipped. The v1.1 backlog is ROADMAP.md.
+Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. All levels were run on the Muse VM (CPU); BlackBox was unreachable in the Build and Deep cycles (NEEDS-BLACKBOX-ON). See the level READMEs for the named deductions and substitutions: the project uses the QLAB container format designed for this project (not GGUF, no llama.cpp run), and its pruning rows are a NumPy equivalent track because TensorFlow was unavailable on the build machine.
 
 ## Start here
 
@@ -19,6 +19,23 @@ Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. Learn and Build were run
 - Level 3, Deep: benchmarks, optimization, evaluation, hard cases.
 
 ## Benchmarks
+
+### Deep (Level 3)
+
+Measured 2026-11-05 with level-3-deep/run_deep.py on the Muse VM (CPU, Python 3.12, NumPy 1.26.4). The quality against size against speed study: the Build MLP and splits, 10 routes (7 Build routes plus 3 combined prune plus quantize routes). Batch time is the median of 31 full test-set passes after 5 warmups; single time is the median of 101 single-sample passes after 5 warmups. Verdict: INT8 per-channel is the default route (full FP32 accuracy at 1388 bytes, lowest quantized logit MSE), INT4 packed is the smallest route (1081 bytes, 347 of 400), and pruning alone never shrinks the dense size. Full study, charts, failure modes, and grade (7,450 of 10,000) are in level-3-deep/README.md.
+
+| Route | Size bytes | Test accuracy | Logit MSE vs FP32 | Batch ms, median of 31 | Single ms, median of 101 |
+| --- | --- | --- | --- | --- | --- |
+| FP32 | 3013 | 353 of 400 (0.8825) | 0.000000 | 0.250 | 0.0085 |
+| INT8 per-tensor (Learn method) | 1248 | 353 of 400 (0.8825) | 0.000296 | 0.250 | 0.0085 |
+| INT8 per-channel, calibrated | 1388 | 353 of 400 (0.8825) | 0.000129 | 0.192 | 0.0085 |
+| INT4 per-channel packed, calibrated | 1081 | 347 of 400 (0.8675) | 0.045583 | 0.188 | 0.0085 |
+| Pruned 0.3 (NumPy equivalent) | 3013 | 349 of 400 (0.8725) | 0.099430 | 0.248 | 0.0085 |
+| Pruned 0.5 (NumPy equivalent) | 3013 | 350 of 400 (0.8750) | 0.533220 | 0.248 | 0.0085 |
+| Pruned 0.7 (NumPy equivalent) | 3013 | 319 of 400 (0.7975) | 1.955935 | 0.249 | 0.0084 |
+| Pruned 0.3 plus INT8 per-channel | 1388 | 350 of 400 (0.8750) | 0.099504 | 0.189 | 0.0085 |
+| Pruned 0.5 plus INT8 per-channel | 1388 | 351 of 400 (0.8775) | 0.533527 | 0.178 | 0.0085 |
+| Pruned 0.5 plus INT4 packed | 1081 | 348 of 400 (0.8700) | 0.542604 | 0.207 | 0.0086 |
 
 ### Build (Level 2)
 

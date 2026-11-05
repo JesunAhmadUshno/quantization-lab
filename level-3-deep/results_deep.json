@@ -1,0 +1,268 @@
+{
+  "calibration": {
+    "int4_per_channel_packed": {
+      "W1": {
+        "calibration_logit_mse": 0.026969681103986766,
+        "clip_percentile": 100.0
+      },
+      "W2": {
+        "calibration_logit_mse": 0.019597577453583117,
+        "clip_percentile": 99.5
+      }
+    },
+    "int8_per_channel": {
+      "W1": {
+        "calibration_logit_mse": 6.357581825431516e-05,
+        "clip_percentile": 100.0
+      },
+      "W2": {
+        "calibration_logit_mse": 8.286926419772347e-05,
+        "clip_percentile": 100.0
+      }
+    },
+    "pruned_0.3_int8_per_channel": {
+      "W1": {
+        "calibration_logit_mse": 4.3433482719193315e-05,
+        "clip_percentile": 100.0
+      },
+      "W2": {
+        "calibration_logit_mse": 5.1636863435637094e-05,
+        "clip_percentile": 100.0
+      }
+    },
+    "pruned_0.5_int4_per_channel_packed": {
+      "W1": {
+        "calibration_logit_mse": 0.010905759505326183,
+        "clip_percentile": 100.0
+      },
+      "W2": {
+        "calibration_logit_mse": 0.011305443470884937,
+        "clip_percentile": 98.0
+      }
+    },
+    "pruned_0.5_int8_per_channel": {
+      "W1": {
+        "calibration_logit_mse": 2.4591594467790466e-05,
+        "clip_percentile": 100.0
+      },
+      "W2": {
+        "calibration_logit_mse": 3.952637504749168e-05,
+        "clip_percentile": 100.0
+      }
+    }
+  },
+  "dataset": {
+    "calibration_samples": 200,
+    "kind": "synthetic Gaussian mixture, 4 classes, input dimension 16, centers seed 7 scale 0.6, noise std 1.0",
+    "test_samples": 400,
+    "train_samples": 800
+  },
+  "fp32_test_correct": 353,
+  "model": {
+    "architecture": "MLP 16-32-4, ReLU hidden, 676 parameters",
+    "initialization_seed": 42,
+    "training": "full-batch gradient descent, 60 epochs, learning rate 0.1, softmax cross entropy"
+  },
+  "rows": [
+    {
+      "accuracy_delta_vs_fp32": 0.0,
+      "accuracy_per_kb": 0.2928974444075672,
+      "logit_mse_vs_fp32": 7.30816304058772e-15,
+      "max_abs_weight_error": 2.9023292991148253e-08,
+      "mean_abs_weight_error": 5.318694594549221e-09,
+      "nonzero_parameters": 676,
+      "pareto_optimal": false,
+      "size_bytes": 3013,
+      "size_ratio_vs_fp32": 1.0,
+      "test_accuracy": 0.8825,
+      "test_correct": 353,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.24970499998744344,
+      "timing_single_ms_median": 0.008533000254828949,
+      "variant": "fp32"
+    },
+    {
+      "accuracy_delta_vs_fp32": 0.0,
+      "accuracy_per_kb": 0.7071314102564102,
+      "logit_mse_vs_fp32": 0.0002956580616008356,
+      "max_abs_weight_error": 0.005103368119379698,
+      "mean_abs_weight_error": 0.002292266870855778,
+      "pareto_optimal": true,
+      "size_bytes": 1248,
+      "size_ratio_vs_fp32": 2.4142628205128207,
+      "test_accuracy": 0.8825,
+      "test_correct": 353,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.24952500007202616,
+      "timing_single_ms_median": 0.008493000223097624,
+      "variant": "int8_per_tensor"
+    },
+    {
+      "accuracy_delta_vs_fp32": 0.0,
+      "accuracy_per_kb": 0.635806916426513,
+      "logit_mse_vs_fp32": 0.00012855537103276037,
+      "max_abs_weight_error": 0.0046097149687869265,
+      "mean_abs_weight_error": 0.0012674942494605497,
+      "pareto_optimal": false,
+      "size_bytes": 1388,
+      "size_ratio_vs_fp32": 2.1707492795389047,
+      "test_accuracy": 0.8825,
+      "test_correct": 353,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.19241900008637458,
+      "timing_single_ms_median": 0.008472999979858287,
+      "variant": "int8_per_channel"
+    },
+    {
+      "accuracy_delta_vs_fp32": -0.014999999999999902,
+      "accuracy_per_kb": 0.8024976873265496,
+      "logit_mse_vs_fp32": 0.045583055066125644,
+      "max_abs_weight_error": 0.08378411128615822,
+      "mean_abs_weight_error": 0.023948005514076227,
+      "pareto_optimal": false,
+      "size_bytes": 1081,
+      "size_ratio_vs_fp32": 2.7872340425531914,
+      "test_accuracy": 0.8675,
+      "test_correct": 347,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.18775199987430824,
+      "timing_single_ms_median": 0.008502999662596267,
+      "variant": "int4_per_channel_packed"
+    },
+    {
+      "accuracy_delta_vs_fp32": -0.009999999999999898,
+      "accuracy_per_kb": 0.28957849319615003,
+      "logit_mse_vs_fp32": 0.0994304653745515,
+      "max_abs_weight_error": 0.1333208515800323,
+      "mean_abs_weight_error": 0.018083068768891385,
+      "nonzero_parameters": 485,
+      "note": "NumPy magnitude pruning, labelled equivalent track. TensorFlow unavailable on this machine. Stored dense in FP32.",
+      "pareto_optimal": false,
+      "size_bytes": 3013,
+      "size_ratio_vs_fp32": 1.0,
+      "sparsity": 0.3,
+      "test_accuracy": 0.8725,
+      "test_correct": 349,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.2476919999025995,
+      "timing_single_ms_median": 0.008452999736618949,
+      "variant": "pruned_0.3"
+    },
+    {
+      "accuracy_delta_vs_fp32": -0.007499999999999951,
+      "accuracy_per_kb": 0.2904082309990043,
+      "logit_mse_vs_fp32": 0.5332199252768538,
+      "max_abs_weight_error": 0.21812260860183602,
+      "mean_abs_weight_error": 0.052308303084349674,
+      "nonzero_parameters": 356,
+      "note": "NumPy magnitude pruning, labelled equivalent track. TensorFlow unavailable on this machine. Stored dense in FP32.",
+      "pareto_optimal": false,
+      "size_bytes": 3013,
+      "size_ratio_vs_fp32": 1.0,
+      "sparsity": 0.5,
+      "test_accuracy": 0.875,
+      "test_correct": 350,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.24826200024108402,
+      "timing_single_ms_median": 0.008491999778925674,
+      "variant": "pruned_0.5"
+    },
+    {
+      "accuracy_delta_vs_fp32": -0.08499999999999996,
+      "accuracy_per_kb": 0.2646863591105211,
+      "logit_mse_vs_fp32": 1.9559350787117784,
+      "max_abs_weight_error": 0.34113609248485005,
+      "mean_abs_weight_error": 0.10604609372996836,
+      "nonzero_parameters": 229,
+      "note": "NumPy magnitude pruning, labelled equivalent track. TensorFlow unavailable on this machine. Stored dense in FP32.",
+      "pareto_optimal": false,
+      "size_bytes": 3013,
+      "size_ratio_vs_fp32": 1.0,
+      "sparsity": 0.7,
+      "test_accuracy": 0.7975,
+      "test_correct": 319,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.2486230000613432,
+      "timing_single_ms_median": 0.008423000053880969,
+      "variant": "pruned_0.7"
+    },
+    {
+      "accuracy_delta_vs_fp32": -0.007499999999999951,
+      "accuracy_per_kb": 0.6304034582132565,
+      "bits": 8,
+      "logit_mse_vs_fp32": 0.09950358012151855,
+      "max_abs_weight_error": 0.1333208515800323,
+      "mean_abs_weight_error": 0.018959376847634046,
+      "nonzero_parameters": 485,
+      "note": "Prune first, then calibrated per-channel quantization of the pruned weights. NumPy pruning track, not a TensorFlow result.",
+      "pareto_optimal": false,
+      "size_bytes": 1388,
+      "size_ratio_vs_fp32": 2.1707492795389047,
+      "sparsity": 0.3,
+      "test_accuracy": 0.875,
+      "test_correct": 350,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.18905400020230445,
+      "timing_single_ms_median": 0.008463000085612293,
+      "variant": "pruned_0.3_int8_per_channel"
+    },
+    {
+      "accuracy_delta_vs_fp32": -0.0050000000000000044,
+      "accuracy_per_kb": 0.6322046109510087,
+      "bits": 8,
+      "logit_mse_vs_fp32": 0.5335272139509047,
+      "max_abs_weight_error": 0.21812260860183602,
+      "mean_abs_weight_error": 0.05289394418462242,
+      "nonzero_parameters": 356,
+      "note": "Prune first, then calibrated per-channel quantization of the pruned weights. NumPy pruning track, not a TensorFlow result.",
+      "pareto_optimal": false,
+      "size_bytes": 1388,
+      "size_ratio_vs_fp32": 2.1707492795389047,
+      "sparsity": 0.5,
+      "test_accuracy": 0.8775,
+      "test_correct": 351,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.1778070000000298,
+      "timing_single_ms_median": 0.00848299987410428,
+      "variant": "pruned_0.5_int8_per_channel"
+    },
+    {
+      "accuracy_delta_vs_fp32": -0.012499999999999956,
+      "accuracy_per_kb": 0.8048103607770583,
+      "bits": 4,
+      "logit_mse_vs_fp32": 0.5426041296380762,
+      "max_abs_weight_error": 0.21812260860183602,
+      "mean_abs_weight_error": 0.06353321878232263,
+      "nonzero_parameters": 356,
+      "note": "Prune first, then calibrated per-channel quantization of the pruned weights. NumPy pruning track, not a TensorFlow result.",
+      "pareto_optimal": true,
+      "size_bytes": 1081,
+      "size_ratio_vs_fp32": 2.7872340425531914,
+      "sparsity": 0.5,
+      "test_accuracy": 0.87,
+      "test_correct": 348,
+      "test_total": 400,
+      "timing_batch_ms_median": 0.2069510001092567,
+      "timing_single_ms_median": 0.008573000286560273,
+      "variant": "pruned_0.5_int4_per_channel_packed"
+    }
+  ],
+  "scenario": "Level 3 Deep: quality against size against speed study on the Build MLP (16-32-4, 676 parameters), 10 routes (7 Build routes plus 3 combined prune plus quantize routes), CPU only",
+  "substitutions": [
+    "QLAB container format, designed for this project, is used instead of GGUF. QLAB is not GGUF and no file here runs in llama.cpp, which is unavailable on this machine.",
+    "The pruning and combined rows use the NumPy equivalent pruning track. TensorFlow is unavailable on this machine, verified this cycle.",
+    "No GPU was used. BlackBox was unreachable this cycle (NEEDS-BLACKBOX-ON). All timing is CPU timing on this Muse VM."
+  ],
+  "timing_note": "timing_batch_ms_median is the median of 31 full test-set (400 sample) forward passes after 5 warmup passes. timing_single_ms_median is the median of 101 single-sample forward passes after 5 warmup passes. Both are CPU timing on this machine (single machine, varying load), on dequantized weights for quantized variants. These two fields per row are the only nondeterministic fields in this file.",
+  "verdict_inputs": {
+    "best_accuracy_route": "fp32",
+    "lowest_mse_quantized_at_fp32_accuracy": "int8_per_channel",
+    "pareto_routes": [
+      "int8_per_tensor",
+      "pruned_0.5_int4_per_channel_packed"
+    ],
+    "smallest_at_fp32_accuracy": "int8_per_tensor",
+    "smallest_route": "int4_per_channel_packed",
+    "under_1200_bytes_best": "pruned_0.5_int4_per_channel_packed"
+  }
+}

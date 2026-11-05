@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="460" viewBox="0 0 720 460">
+<title>Test accuracy vs batch time (P11 Deep, measured)</title>
+<rect x="0" y="0" width="720" height="460" fill="white"/>
+<text x="360" y="24" text-anchor="middle" font-family="monospace" font-size="14">Test accuracy vs batch time (P11 Deep, measured)</text>
+<rect x="70" y="44" width="480" height="360" fill="none" stroke="black"/>
+<text x="310" y="448" text-anchor="middle" font-family="monospace" font-size="12">batch time, median ms for 400 samples</text>
+<text x="16" y="224" text-anchor="middle" font-family="monospace" font-size="12" transform="rotate(-90 16 224)">test accuracy</text>
+<text x="70" y="422" font-family="monospace" font-size="10">0.1706</text>
+<text x="550" y="422" text-anchor="end" font-family="monospace" font-size="10">0.2569</text>
+<text x="64" y="404" text-anchor="end" font-family="monospace" font-size="10">0.789</text>
+<text x="64" y="52" text-anchor="end" font-family="monospace" font-size="10">0.891</text>
+<circle cx="510.0" cy="74.0" r="5" fill="#b00020"/>
+<text x="518.0" y="78.0" font-family="monospace" font-size="10">fp32</text>
+<circle cx="509.0" cy="74.0" r="5" fill="#b00020"/>
+<text x="517.0" y="78.0" font-family="monospace" font-size="10">int8_per_tensor</text>
+<circle cx="191.3" cy="74.0" r="5" fill="#b00020"/>
+<text x="199.3" y="78.0" font-family="monospace" font-size="10">int8_per_channel</text>
+<circle cx="165.3" cy="126.9" r="5" fill="#b00020"/>
+<text x="173.3" y="130.9" font-family="monospace" font-size="10">int4_per_channel_packed</text>
+<circle cx="498.8" cy="109.3" r="5" fill="#b00020"/>
+<text x="506.8" y="113.3" font-family="monospace" font-size="10">pruned_0.3</text>
+<circle cx="502.0" cy="100.5" r="5" fill="#b00020"/>
+<text x="510.0" y="104.5" font-family="monospace" font-size="10">pruned_0.5</text>
+<circle cx="504.0" cy="374.0" r="5" fill="#b00020"/>
+<text x="512.0" y="378.0" font-family="monospace" font-size="10">pruned_0.7</text>
+<circle cx="172.6" cy="100.5" r="5" fill="#b00020"/>
+<text x="180.6" y="104.5" font-family="monospace" font-size="10">pruned_0.3_int8_per_channel</text>
+<circle cx="110.0" cy="91.6" r="5" fill="#b00020"/>
+<text x="118.0" y="95.6" font-family="monospace" font-size="10">pruned_0.5_int8_per_channel</text>
+<circle cx="272.1" cy="118.1" r="5" fill="#b00020"/>
+<text x="280.1" y="122.1" font-family="monospace" font-size="10">pruned_0.5_int4_per_channel_packed</text>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="460" viewBox="0 0 720 460">
+<title>Logit MSE vs FP32 vs serialized size (P11 Deep, measured)</title>
+<rect x="0" y="0" width="720" height="460" fill="white"/>
+<text x="360" y="24" text-anchor="middle" font-family="monospace" font-size="14">Logit MSE vs FP32 vs serialized size (P11 Deep, measured)</text>
+<rect x="70" y="44" width="480" height="360" fill="none" stroke="black"/>
+<text x="310" y="448" text-anchor="middle" font-family="monospace" font-size="12">serialized QLAB size, bytes</text>
+<text x="16" y="224" text-anchor="middle" font-family="monospace" font-size="12" transform="rotate(-90 16 224)">logit MSE vs FP32</text>
+<text x="70" y="422" font-family="monospace" font-size="10">887.8</text>
+<text x="550" y="422" text-anchor="end" font-family="monospace" font-size="10">3206</text>
+<text x="64" y="404" text-anchor="end" font-family="monospace" font-size="10">-0.1956</text>
+<text x="64" y="52" text-anchor="end" font-family="monospace" font-size="10">2.152</text>
+<circle cx="510.0" cy="374.0" r="5" fill="#b00020"/>
+<text x="518.0" y="378.0" font-family="monospace" font-size="10">fp32</text>
+<circle cx="144.6" cy="374.0" r="5" fill="#b00020"/>
+<text x="152.6" y="378.0" font-family="monospace" font-size="10">int8_per_tensor</text>
+<circle cx="173.6" cy="374.0" r="5" fill="#b00020"/>
+<text x="181.6" y="378.0" font-family="monospace" font-size="10">int8_per_channel</text>
+<circle cx="110.0" cy="367.0" r="5" fill="#b00020"/>
+<text x="118.0" y="371.0" font-family="monospace" font-size="10">int4_per_channel_packed</text>
+<circle cx="510.0" cy="358.7" r="5" fill="#b00020"/>
+<text x="518.0" y="362.7" font-family="monospace" font-size="10">pruned_0.3</text>
+<circle cx="510.0" cy="292.2" r="5" fill="#b00020"/>
+<text x="518.0" y="296.2" font-family="monospace" font-size="10">pruned_0.5</text>
+<circle cx="510.0" cy="74.0" r="5" fill="#b00020"/>
+<text x="518.0" y="78.0" font-family="monospace" font-size="10">pruned_0.7</text>
+<circle cx="173.6" cy="358.7" r="5" fill="#b00020"/>
+<text x="181.6" y="362.7" font-family="monospace" font-size="10">pruned_0.3_int8_per_channel</text>
+<circle cx="173.6" cy="292.2" r="5" fill="#b00020"/>
+<text x="181.6" y="296.2" font-family="monospace" font-size="10">pruned_0.5_int8_per_channel</text>
+<circle cx="110.0" cy="290.8" r="5" fill="#b00020"/>
+<text x="118.0" y="294.8" font-family="monospace" font-size="10">pruned_0.5_int4_per_channel_packed</text>
+</svg>
