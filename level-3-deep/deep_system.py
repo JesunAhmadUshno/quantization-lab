@@ -17,8 +17,6 @@ does not show a real INT8 or INT4 kernel speed.
 import os
 import sys
 
-import numpy as np
-
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = os.path.join(os.path.dirname(HERE), "level-2-build")
 if BUILD_DIR not in sys.path:
