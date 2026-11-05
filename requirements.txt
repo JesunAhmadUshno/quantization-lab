@@ -2,4 +2,4 @@
 # Level 1 (Learn) uses the Python standard library only.
 # Level 2 (Build), Level 3 (Deep), and the Build and Deep tests use NumPy.
 # The measured v1.0 results were recorded with NumPy 1.26.4 on Python 3.12.
-numpy==1.26.4
+numpy==2.5.4
