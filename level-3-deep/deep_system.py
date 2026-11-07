@@ -14,6 +14,7 @@ TensorFlow result. Quality and timing use dequantized weights
 in a NumPy forward pass on CPU (fake quantization), so timing
 does not show a real INT8 or INT4 kernel speed.
 """
+import math
 import os
 import sys
 
@@ -87,14 +88,24 @@ def pareto_flags(rows):
 
 
 def recommend_route(rows, max_size_bytes=None, min_accuracy=None,
-                    max_batch_ms=None):
+                    max_batch_ms=None, accuracy_tie=None):
     """The decision rule, as code. See DEEP-SPEC.md.
 
     Filters routes meeting every given constraint, then ranks
     survivors by accuracy (highest), logit MSE (lowest), size
     (smallest), batch time (lowest). Returns the winning row,
     or None when no route meets the constraints.
+
+    accuracy_tie (optional, default None keeps the original
+    rule): survivors whose accuracy is within accuracy_tie of
+    the best survivor count as tied on accuracy, and the tied
+    group is ranked by logit MSE, size, batch time. With
+    accuracy_tie = 1/400 (one test sample) and a 1200 byte cap
+    on the recorded rows, this picks plain INT4 packed, which
+    is what the written verdict in README.md recommends.
     """
+    if accuracy_tie is not None and accuracy_tie < 0:
+        raise DeepError("accuracy_tie must be non-negative")
     survivors = []
     for row in rows:
         if max_size_bytes is not None and row["size_bytes"] > max_size_bytes:
@@ -107,10 +118,54 @@ def recommend_route(rows, max_size_bytes=None, min_accuracy=None,
         survivors.append(row)
     if not survivors:
         return None
+    if accuracy_tie is not None:
+        best = max(r["test_accuracy"] for r in survivors)
+        # 1e-12 absorbs float error in differences like 0.87 - 0.8675.
+        tied = [r for r in survivors
+                if best - r["test_accuracy"] <= accuracy_tie + 1e-12]
+        return sorted(
+            tied,
+            key=lambda r: (r["logit_mse_vs_fp32"], r["size_bytes"],
+                           r["timing_batch_ms_median"]))[0]
     return sorted(
         survivors,
         key=lambda r: (-r["test_accuracy"], r["logit_mse_vs_fp32"],
                        r["size_bytes"], r["timing_batch_ms_median"]))[0]
+
+
+def wilson_interval(correct, total, z=1.96):
+    """Wilson score interval for a binomial proportion (Wilson 1927).
+
+    Returns (low, high). Hand check: 5 of 10 gives 0.2366 to
+    0.7634 at z 1.96. Used to show which accuracy differences
+    out of 400 test samples are inside sampling noise.
+    """
+    if total <= 0 or correct < 0 or correct > total:
+        raise DeepError("need 0 <= correct <= total and total > 0")
+    p = correct / total
+    denom = 1.0 + z * z / total
+    centre = (p + z * z / (2.0 * total)) / denom
+    half = (z * math.sqrt(p * (1.0 - p) / total
+                          + z * z / (4.0 * total * total)) / denom)
+    return max(0.0, centre - half), min(1.0, centre + half)
+
+
+def mcnemar_exact(b, c):
+    """Exact two-sided McNemar test on discordant pair counts.
+
+    b: samples the reference gets right and the route gets
+    wrong. c: the reverse. Under no difference, b given b + c
+    is Binomial(b + c, 0.5). Returns min(1, 2 * P(X <= min(b,
+    c))). Hand checks: (5, 0) gives 0.0625; (0, 0) gives 1.0.
+    """
+    if b < 0 or c < 0:
+        raise DeepError("discordant counts must be non-negative")
+    n = b + c
+    if n == 0:
+        return 1.0
+    k = min(b, c)
+    tail = sum(math.comb(n, i) for i in range(k + 1)) / (2 ** n)
+    return min(1.0, 2.0 * tail)
 
 
 def _scale(value, low, high, out_low, out_high):
