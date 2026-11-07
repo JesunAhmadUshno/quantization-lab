@@ -83,8 +83,9 @@ def build_datasets():
 
 # ---------------------------------------------------------------- model
 
-def init_model():
-    rng = np.random.RandomState(INIT_SEED)
+def init_model(seed=None):
+    """Seeded weight init. seed None uses INIT_SEED (the recorded runs)."""
+    rng = np.random.RandomState(INIT_SEED if seed is None else seed)
     return {"W1": rng.normal(0.0, math.sqrt(2.0 / INPUT_DIM),
                              size=(INPUT_DIM, HIDDEN_DIM)),
             "b1": np.zeros(HIDDEN_DIM),
