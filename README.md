@@ -1,6 +1,6 @@
 # quantization-lab
 
-Model optimization: INT8 and INT4, GGUF builds, a quality against size against speed study.
+Model optimization: INT8 and INT4 quantization and pruning of a small NumPy MLP, serialized in the QLAB container (not GGUF), with a quality against size against speed study. GGUF builds are v1.1 backlog (ROADMAP.md).
 
 Live dashboard: https://jesunahmadushno.github.io/quantization-lab/
 
