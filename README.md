@@ -2,6 +2,8 @@
 
 Model optimization: INT8 and INT4, GGUF builds, a quality against size against speed study.
 
+Live dashboard: https://jesunahmadushno.github.io/quantization-lab/
+
 Status: Learn DONE, Build DONE, and Deep DONE (2026-11-05, ROADMAP-V3-BATCH). v1.0 shipped. The v1.1 backlog is ROADMAP.md.
 Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. All levels were run on the Muse VM (CPU); BlackBox was unreachable in the Build and Deep cycles (NEEDS-BLACKBOX-ON). See the level READMEs for the named deductions and substitutions: the project uses the QLAB container format designed for this project (not GGUF, no llama.cpp run), and its pruning rows are a NumPy equivalent track because TensorFlow was unavailable on the build machine.
 
@@ -64,6 +66,10 @@ Measured 2026-11-05 with level-1-learn/run_learn.py on the Muse VM, Python 3.12.
 | Synthetic task (8 samples) | FP32 8 of 8, INT8 8 of 8, INT4 8 of 8; score MAE vs FP32: INT8 0.002707, INT4 0.049107 |
 | Unit tests | 23 passed, plus the scaffold smoke test |
 | Determinism | results_learn.json identical across two runs (hash verified) |
+
+### Seed study and uncertainty (Level 3 add-on)
+
+level-3-deep/seed_study.py reruns the same 10 routes over 10 seed sets (training init and the train, calibration and test draws vary; class centers fixed) and writes level-3-deep/results_seeds.json, with no timing. Seed index 0 reproduces results_deep.json exactly (a test asserts it). It records per-sample predictions for seed 0, the exact McNemar test of every route against FP32, and Wilson 95% intervals. Across seeds, INT8 per-tensor and per-channel stay within 2 samples of FP32 and never differ significantly; pruned 0.7 is significantly worse in 10 of 10 seeds. Under a 1200 byte budget, recommend_route picks plain INT4 in 9 of 10 seeds; the recorded seed is the one exception. The new optional accuracy_tie argument (1/400, one sample) makes the code pick plain INT4 on the recorded rows, matching the verdict. Full grading against a research rubric is in docs/research-review.md.
 
 ## Fan-out
 
