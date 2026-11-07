@@ -36,3 +36,5 @@ jobs:
         run: python -m unittest discover -s tests -p "test_deep*.py" -v
       - name: level 3 deep run
         run: python level-3-deep/run_deep.py
+      - name: level 3 seed study run
+        run: python level-3-deep/seed_study.py
