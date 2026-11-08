@@ -20,7 +20,6 @@ https://github.com/JesunAhmadUshno/quantization-lab/releases
   (3.0x smaller, max abs error 0.003937), INT4 packed 10 total
   bytes (4.8x smaller, max abs error 0.071429), and FP32, INT8,
   and INT4 each scoring 8 of 8 on the synthetic task.
-- Level grade: 8,700 of 10,000.
 - Release: https://github.com/JesunAhmadUshno/quantization-lab/releases/tag/v0.1
 
 ## v0.5, Build (2026-11-05)
@@ -36,7 +35,6 @@ https://github.com/JesunAhmadUshno/quantization-lab/releases
   kept 353 of 400 at 1388 bytes; INT4 packed scored 347 of 400
   (0.8675) at 1081 bytes; pruned variants stayed at 3013 bytes at
   every sparsity in dense storage.
-- Level grade: 7,600 of 10,000.
 - Release: https://github.com/JesunAhmadUshno/quantization-lab/releases/tag/v0.5
 
 ## v1.0, Learn, Build, and compressed Deep (2026-11-05)
@@ -55,7 +53,6 @@ https://github.com/JesunAhmadUshno/quantization-lab/releases
   400), pruning alone never shrinks the dense size, and combined
   routes do not shrink size beyond their plain quantized
   counterparts.
-- Level grade: 7,450 of 10,000 (compressed Deep).
 - Release: https://github.com/JesunAhmadUshno/quantization-lab/releases/tag/v1.0
 
 ## Held channels

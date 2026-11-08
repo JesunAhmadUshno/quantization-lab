@@ -1,87 +1,76 @@
 # quantization-lab
 
-Model optimization: INT8 and INT4 quantization and pruning of a small NumPy MLP, serialized in the QLAB container (not GGUF), with a quality against size against speed study. GGUF builds are v1.1 backlog (ROADMAP.md).
+**Question.** At small-model scale, what do symmetric INT8 and INT4
+weight quantization and magnitude pruning cost in serialized size,
+accuracy and logit fidelity, and which route should be picked under a
+byte budget?
+
+**Headline.** On a 676-parameter NumPy MLP with synthetic data (not a real model), INT8 per-channel weight quantization kept FP32 test accuracy, 353 of 400 (Wilson 95% interval 0.847 to 0.910), at 1388 bytes, 2.17 times smaller than FP32; across 10 seeds neither INT8 route moved more than 2 of 400 samples from FP32 and none differed significantly (exact McNemar p < 0.05 in 0 of 10 seeds).
+
+**Field.** ML and AI research. **Job family.** ML engineering, model
+optimization and inference.
+
+**Verdict.** Functional, not pre-registered. Tests pass in CI on Python
+3.11 and 3.12, the whole study reruns with one command, and CI proves
+every results file regenerates from the code. No plan with hypotheses
+and pass lines was committed before the results, so the repo is capped
+at Functional; the field profile is also not met (no GPTQ, AWQ or
+llama.cpp baseline, no real model). See REPORT.md.
 
 Live dashboard: https://jesunahmadushno.github.io/quantization-lab/
 
-Status: Learn DONE, Build DONE, and Deep DONE (2026-11-05, ROADMAP-V3-BATCH). v1.0 shipped. The v1.1 backlog is ROADMAP.md.
-Project: P11. Fleet node: BlackBox (GPU). Wave: Wave 6. All levels were run on the Muse VM (CPU); BlackBox was unreachable in the Build and Deep cycles (NEEDS-BLACKBOX-ON). See the level READMEs for the named deductions and substitutions: the project uses the QLAB container format designed for this project (not GGUF, no llama.cpp run), and its pruning rows are a NumPy equivalent track because TensorFlow was unavailable on the build machine.
+## Reproduce
 
-## Start here
+```text
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests -p "test_*.py" -v
+python scripts/check_results.py
+```
 
-1. Read SPEC.md for scope and acceptance criteria.
-2. Read DOSSIER.md for the past, present, and future of this problem (v1).
-3. Read NOVELTY.md for the proposed novelty (DRAFT, pending the Jev claim_check gate).
-4. Start at level-1-learn/README.md, then level-2-build, then level-3-deep.
+The last command reruns Learn, Build, Deep and the 10-seed study (CPU,
+a few seconds) and fails if any count, size or float in the committed
+results files changes; timing medians are machine facts and are not
+compared. Python 3.11 or 3.12 and NumPy only; Learn uses the standard
+library only.
 
-## Level map
+## Lifecycle
 
-- Level 1, Learn: the core idea, built small and clean, with a teaching path.
-- Level 2, Build: a real working system other people can run.
-- Level 3, Deep: benchmarks, optimization, evaluation, hard cases.
+- Question: DONE 2026-11-04
+- Proposal: NOT PRE-REGISTERED 2026-11-08
+- Baseline: DONE 2026-11-05
+- Build: DONE 2026-11-05
+- Evaluate: PARTIAL 2026-11-07
+- Report: DONE 2026-11-08
+- Review: OPEN
+- Release: OPEN
 
-## Benchmarks
+Proposal: SPEC.md (2026-11-04) set scope only; the Build and Deep
+designs were committed together with their results, so nothing is
+locked (PROPOSAL.md). Evaluate is partial: uncertainty and seeds are
+in, the baselines a reviewer would expect are not. Release: the tags
+v0.1, v0.5 and v1.0 (2026-11-05) predate this standard and are kept as
+they are; they are not a v1.0 Released verdict.
 
-### Deep (Level 3)
+## Layout
 
-Measured 2026-11-05 with level-3-deep/run_deep.py on the Muse VM (CPU, Python 3.12, NumPy 1.26.4). The quality against size against speed study: the Build MLP and splits, 10 routes (7 Build routes plus 3 combined prune plus quantize routes). Batch time is the median of 31 full test-set passes after 5 warmups; single time is the median of 101 single-sample passes after 5 warmups. Verdict: INT8 per-channel is the default route (full FP32 accuracy at 1388 bytes, lowest quantized logit MSE), INT4 packed is the smallest route (1081 bytes, 347 of 400), and pruning alone never shrinks the dense size. Full study, charts, failure modes, and grade (7,450 of 10,000) are in level-3-deep/README.md.
+| Path | Role in the standard | What it holds |
+| --- | --- | --- |
+| PROPOSAL.md | Proposal (not locked) | Question, prior work, hypotheses written after the results, design; the old SPEC, NOVELTY, DOSSIER, BUILD-SPEC and DEEP-SPEC files as appendices |
+| REPORT.md | Report | Results with intervals, every hypothesis scored, misses, threats; the old level READMEs, claim-check records, research review and roadmap as appendices |
+| level-1-learn/ | Code and results (baseline) | quantize.py, run_learn.py, results_learn.json: INT8 and INT4 on a 12-weight model, standard library only |
+| level-2-build/ | Code and results (build) | build_system.py (MLP, quantizers, calibration, pruning, QLAB container), run_build.py, results_build.json |
+| level-3-deep/ | Code and results (evaluation) | deep_system.py, run_deep.py, results_deep.json, seed_study.py, results_seeds.json (per-sample predictions), charts/ |
+| scripts/check_results.py | Results reproduced | Reruns every runner and compares with the committed results |
+| tests/ | Tests | Unit tests per level, the research tests, and the layout test (required files, no public grade) |
+| site/ | Dashboard | Reads the level results files at build time; a build-time check re-derives them in JavaScript |
+| docs/decisions/ | Decisions | Records of hard-to-reverse choices |
+| docs/index.md, fanout/, PUBLICITY.md | Outreach | The legacy summary page, the written fan-out drafts and the channel log |
+| CHANGELOG.md, CITATION.cff, SECURITY.md, LICENSE | Project files | |
 
-| Route | Size bytes | Test accuracy | Logit MSE vs FP32 | Batch ms, median of 31 | Single ms, median of 101 |
-| --- | --- | --- | --- | --- | --- |
-| FP32 | 3013 | 353 of 400 (0.8825) | 0.000000 | 0.250 | 0.0085 |
-| INT8 per-tensor (Learn method) | 1248 | 353 of 400 (0.8825) | 0.000296 | 0.250 | 0.0085 |
-| INT8 per-channel, calibrated | 1388 | 353 of 400 (0.8825) | 0.000129 | 0.192 | 0.0085 |
-| INT4 per-channel packed, calibrated | 1081 | 347 of 400 (0.8675) | 0.045583 | 0.188 | 0.0085 |
-| Pruned 0.3 (NumPy equivalent) | 3013 | 349 of 400 (0.8725) | 0.099430 | 0.248 | 0.0085 |
-| Pruned 0.5 (NumPy equivalent) | 3013 | 350 of 400 (0.8750) | 0.533220 | 0.248 | 0.0085 |
-| Pruned 0.7 (NumPy equivalent) | 3013 | 319 of 400 (0.7975) | 1.955935 | 0.249 | 0.0084 |
-| Pruned 0.3 plus INT8 per-channel | 1388 | 350 of 400 (0.8750) | 0.099504 | 0.189 | 0.0085 |
-| Pruned 0.5 plus INT8 per-channel | 1388 | 351 of 400 (0.8775) | 0.533527 | 0.178 | 0.0085 |
-| Pruned 0.5 plus INT4 packed | 1081 | 348 of 400 (0.8700) | 0.542604 | 0.207 | 0.0086 |
-
-### Build (Level 2)
-
-Measured 2026-11-05 with level-2-build/run_build.py on the Muse VM (CPU, Python 3.12, NumPy 1.26.4). The model is a 2-layer MLP (16-32-4, 676 parameters) trained with NumPy on a synthetic Gaussian mixture: train 800, calibration 200, held-out test 400. Sizes are serialized QLAB container bytes. Quality was measured with dequantized weights on CPU. Pruning rows are a NumPy equivalent track, not a TensorFlow result. Full method, failure modes, and grade (7,600 of 10,000) are in level-2-build/README.md. Learn is unchanged by Build.
-
-| Variant | Size bytes | Max abs weight error | Mean abs weight error | Test accuracy | Logit MSE vs FP32 | CPU time ms, median of 15 |
-| --- | --- | --- | --- | --- | --- | --- |
-| FP32 | 3013 | 0.000000 | 0.000000 | 353 of 400 (0.8825) | 0.000000 | 0.258 |
-| INT8 per-tensor (Learn method) | 1248 | 0.005103 | 0.002292 | 353 of 400 (0.8825) | 0.000296 | 0.258 |
-| INT8 per-channel, calibrated | 1388 | 0.004610 | 0.001267 | 353 of 400 (0.8825) | 0.000129 | 0.195 |
-| INT4 per-channel packed, calibrated | 1081 | 0.083784 | 0.023948 | 347 of 400 (0.8675) | 0.045583 | 0.193 |
-| Pruned 0.3 (NumPy equivalent) | 3013 | 0.133321 | 0.018083 | 349 of 400 (0.8725) | 0.099430 | 0.256 |
-| Pruned 0.5 (NumPy equivalent) | 3013 | 0.218123 | 0.052308 | 350 of 400 (0.8750) | 0.533220 | 0.260 |
-| Pruned 0.7 (NumPy equivalent) | 3013 | 0.341136 | 0.106046 | 319 of 400 (0.7975) | 1.955935 | 0.254 |
-
-### Learn (Level 1)
-
-Measured 2026-11-05 with level-1-learn/run_learn.py on the Muse VM, Python 3.12. The model is a deterministic 4 by 3 linear model, not a real model.
-
-| Test | Result |
-| --- | --- |
-| Weights quantized | 12 weights, symmetric per-tensor, FP32 vs INT8 vs INT4 packed |
-| Size, total bytes | FP32 48, INT8 16 (3.0x smaller), INT4 10 (4.8x smaller), each quantized total includes one 4 byte FP32 scale |
-| INT8 error | max abs 0.003937, mean abs 0.001640, MSE 0.000005 |
-| INT4 error | max abs 0.071429, mean abs 0.029762, MSE 0.001488 |
-| Synthetic task (8 samples) | FP32 8 of 8, INT8 8 of 8, INT4 8 of 8; score MAE vs FP32: INT8 0.002707, INT4 0.049107 |
-| Unit tests | 23 passed, plus the scaffold smoke test |
-| Determinism | results_learn.json identical across two runs (hash verified) |
-
-### Seed study and uncertainty (Level 3 add-on)
-
-level-3-deep/seed_study.py reruns the same 10 routes over 10 seed sets (training init and the train, calibration and test draws vary; class centers fixed) and writes level-3-deep/results_seeds.json, with no timing. Seed index 0 reproduces results_deep.json exactly (a test asserts it). It records per-sample predictions for seed 0, the exact McNemar test of every route against FP32, and Wilson 95% intervals. Across seeds, INT8 per-tensor and per-channel stay within 2 samples of FP32 and never differ significantly; pruned 0.7 is significantly worse in 10 of 10 seeds. Under a 1200 byte budget, recommend_route picks plain INT4 in 9 of 10 seeds; the recorded seed is the one exception. The new optional accuracy_tie argument (1/400, one sample) makes the code pick plain INT4 on the recorded rows, matching the verdict. Full grading against a research rubric is in docs/research-review.md.
-
-## Fan-out
-
-Written fan-out set for v1.0, in fanout/: blog post, tutorial,
-website page copy, LinkedIn post draft (DRAFT NOT POSTED),
-paper candidate brief, and release notes covering v0.1, v0.5,
-and v1.0. The full channel log and per-piece publicity grades
-are in PUBLICITY.md.
-
-## Novelty
-
-PROPOSED. See NOVELTY.md. The novelty text is a draft until the Jev claim_check gate passes on it.
+There is no separate experiments/ or results/ folder: every run is
+seeded and deterministic apart from timing, so each runner's results
+file is both the raw evidence and the scored result, and
+scripts/check_results.py proves it regenerates (docs/decisions/0001).
 
 ## License
 
