@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "quantization-lab: INT8 and INT4 weight quantization and pruning of a small MLP, a reproducible quality against size study"
+authors:
+  - family-names: Ushno
+    given-names: Jesun Ahmad
+repository-code: "https://github.com/JesunAhmadUshno/quantization-lab"
+license: Apache-2.0
+date-released: 2026-11-08

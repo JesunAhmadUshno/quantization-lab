@@ -51,9 +51,9 @@ function MenuBar() {
     <div className="menubar" role="banner">
       <span className="apple" aria-hidden="true">◆</span>
       <a className="app" href="#top">Quantization Lab</a>
-      <a className="m" href={blob('SPEC.md')}>Spec</a>
-      <a className="m" href={blob('level-3-deep/README.md')}>Deep study</a>
-      <a className="m" href={blob('docs/research-review.md')}>Research review</a>
+      <a className="m" href={blob('PROPOSAL.md')}>Proposal</a>
+      <a className="m" href={blob('REPORT.md')}>Report</a>
+      <a className="m" href={blob('REPORT.md')}>Research review</a>
       <span className="spacer" />
       <span className="status"><i /> CI reproducible</span>
       <a href={REPO}>GitHub ↗</a>
@@ -135,8 +135,8 @@ function Hero() {
       </p>
       <div className="actions">
         <a className="btn primary" href="#quantize">Try the live quantizer</a>
-        <a className="btn ghost" href={blob('level-3-deep/README.md')}>Read the Deep study</a>
-        <span className="hint">Scope: {deep.model.architecture}, synthetic data, CPU only, fake quantization.</span>
+        <a className="btn ghost" href={blob('REPORT.md')}>Read the Deep study</a>
+        <span className="hint">Verdict: Functional, not pre-registered. Scope: {deep.model.architecture}, synthetic data, CPU only, fake quantization.</span>
       </div>
       <div className="tiles tiles3">
         {tiles.map(({ r, cap }) => (
@@ -382,8 +382,8 @@ function Decision() {
           {budgetMode && strict.winner && res.winner && (
             <p className={`note ${tie ? 'good' : 'warn'}`}>
               {tie && res.winner.variant !== strict.winner.variant
-                ? <>With the tie, the code now agrees with the README verdict (&ldquo;pick plain INT4 per-channel packed&rdquo;). Without it, the code picks {routeName(strict.winner.variant)}.</>
-                : <>Recorded disagreement: under {BUDGET} bytes the code picks <b>{routeName(strict.winner.variant)}</b> ({strict.winner.test_correct} of {N_TEST}), while the README verdict picks plain INT4 packed ({BY.int4_per_channel_packed.test_correct} of {N_TEST}) because a one-sample edge with {(strict.winner.logit_mse_vs_fp32 / BY.int4_per_channel_packed.logit_mse_vs_fp32).toFixed(0)}× the logit MSE is noise. Try the 1-sample tie.</>}
+                ? <>With the tie, the code now agrees with the written verdict (&ldquo;pick plain INT4 per-channel packed&rdquo;). Without it, the code picks {routeName(strict.winner.variant)}.</>
+                : <>Recorded disagreement: under {BUDGET} bytes the code picks <b>{routeName(strict.winner.variant)}</b> ({strict.winner.test_correct} of {N_TEST}), while the written verdict picks plain INT4 packed ({BY.int4_per_channel_packed.test_correct} of {N_TEST}) because a one-sample edge with {(strict.winner.logit_mse_vs_fp32 / BY.int4_per_channel_packed.logit_mse_vs_fp32).toFixed(0)}× the logit MSE is noise. Try the 1-sample tie.</>}
             </p>
           )}
         </div>
@@ -505,9 +505,9 @@ function Levels() {
   const same = (r) => { const b = brow[r.variant]; return b.size_bytes === r.size_bytes && b.test_correct === r.test_correct && b.logit_mse_vs_fp32 === r.logit_mse_vs_fp32; };
   const allSame = rebuilt.every(same);
   const steps = [
-    ['Learn', `${s.weight_count} weights, stdlib only`, `FP32 ${s.fp32_total_bytes} B → INT8 ${s.int8_total_bytes} B → INT4 ${s.int4_total_bytes} B; all ${s.task_samples} task samples correct at every width.`, 'level-1-learn/README.md'],
-    ['Build', build.model.architecture, `${build.rows.length} variants in the QLAB container; INT8 per-channel ${brow.int8_per_channel.test_correct} of ${brow.int8_per_channel.test_total} at ${fmt(brow.int8_per_channel.size_bytes)} B.`, 'level-2-build/README.md'],
-    ['Deep', `${ROWS.length} routes, Pareto + decision rule`, `${deep.verdict_inputs.pareto_routes.length} Pareto routes; smallest is ${routeName(deep.verdict_inputs.smallest_route)} at ${fmt(BY[deep.verdict_inputs.smallest_route].size_bytes)} B.`, 'level-3-deep/README.md'],
+    ['Learn', `${s.weight_count} weights, stdlib only`, `FP32 ${s.fp32_total_bytes} B → INT8 ${s.int8_total_bytes} B → INT4 ${s.int4_total_bytes} B; all ${s.task_samples} task samples correct at every width.`, 'REPORT.md'],
+    ['Build', build.model.architecture, `${build.rows.length} variants in the QLAB container; INT8 per-channel ${brow.int8_per_channel.test_correct} of ${brow.int8_per_channel.test_total} at ${fmt(brow.int8_per_channel.size_bytes)} B.`, 'REPORT.md'],
+    ['Deep', `${ROWS.length} routes, Pareto + decision rule`, `${deep.verdict_inputs.pareto_routes.length} Pareto routes; smallest is ${routeName(deep.verdict_inputs.smallest_route)} at ${fmt(BY[deep.verdict_inputs.smallest_route].size_bytes)} B.`, 'REPORT.md'],
   ];
   return (
     <section id="levels" className="card window reveal" data-title="levels/ — Learn · Build · Deep">
@@ -515,7 +515,7 @@ function Levels() {
       <h2>Three levels, each one <em>reusing</em> the last by import.</h2>
       <ol className="steps" style={{ marginTop: 16 }}>
         {steps.map(([t, k, d, p], i) => (
-          <li key={t}><span className="n">{i + 1}</span><div><b>{t}</b> · <span className="hint">{k}</span><div className="hint">{d} <a href={blob(p)}>README</a></div></div></li>
+          <li key={t}><span className="n">{i + 1}</span><div><b>{t}</b> · <span className="hint">{k}</span><div className="hint">{d} <a href={blob(p)}>Record</a></div></div></li>
         ))}
       </ol>
       <div className="grid2" style={{ marginTop: 20 }}>
@@ -557,25 +557,25 @@ function Limits() {
     ['Activation and asymmetric quantization; GPTQ and AWQ rows', 'Weight-only symmetric round-to-nearest is all that is measured here.'],
   ];
   return (
-    <section id="limits" className="card window reveal" data-title="ROADMAP.md — limits and v1.1 backlog">
+    <section id="limits" className="card window reveal" data-title="REPORT.md — limits and v1.1 backlog">
       <p className="eyebrow">Limits and roadmap</p>
       <h2>What this study <em>cannot</em> tell you.</h2>
       <p className="sub">One {PARAMS}-parameter MLP on synthetic Gaussian-mixture data, fake quantization on CPU, weights only. It shows the shape of a quantization study, not numbers that transfer to LLMs.</p>
       <ul className="scope">{deep.substitutions.map((s) => <li key={s}>{s}</li>)}</ul>
       <h3 style={{ marginTop: 20 }}>v1.1 backlog: not built, not measured</h3>
       <div className="docs" style={{ marginTop: 12 }}>
-        {backlog.map(([t, d]) => <a key={t} href={blob('ROADMAP.md')}><b>{t}</b><small>{d}</small></a>)}
+        {backlog.map(([t, d]) => <a key={t} href={blob('REPORT.md')}><b>{t}</b><small>{d}</small></a>)}
       </div>
       <h3 style={{ marginTop: 24 }}>Reproduce</h3>
       <ol className="steps" style={{ marginTop: 12 }} id="reproduce">
         <li><span className="n">1</span><div><b>Clone and install</b><div className="hint"><code>git clone {REPO}.git && pip install -r requirements.txt</code></div></div></li>
         <li><span className="n">2</span><div><b>Run the study</b><div className="hint"><code>python level-3-deep/run_deep.py</code> (timing fields change per run) and <code>python level-3-deep/seed_study.py</code></div></div></li>
-        <li><span className="n">3</span><div><b>Run the tests</b><div className="hint"><code>python -m unittest discover -s tests</code></div></div></li>
+        <li><span className="n">3</span><div><b>Run the tests and the regeneration check</b><div className="hint"><code>python -m unittest discover -s tests</code> and <code>python scripts/check_results.py</code></div></div></li>
       </ol>
       <div className="docs" style={{ marginTop: 20 }}>
-        <a href={blob('docs/research-review.md')}><b>Research review</b><small>Rubric grades, fixes and remaining gaps</small></a>
-        <a href={blob('level-3-deep/README.md')}><b>Deep study</b><small>Verdict, failure modes, grade</small></a>
-        <a href={blob('ROADMAP.md')}><b>Roadmap</b><small>The v1.1 backlog</small></a>
+        <a href={blob('REPORT.md')}><b>Research review</b><small>Fixes and remaining gaps</small></a>
+        <a href={blob('REPORT.md')}><b>Deep study</b><small>Verdict and failure modes</small></a>
+        <a href={blob('REPORT.md')}><b>Roadmap</b><small>The v1.1 backlog</small></a>
       </div>
     </section>
   );

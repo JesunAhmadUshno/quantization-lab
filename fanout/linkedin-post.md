@@ -44,9 +44,6 @@ GPU run, and no quantized kernel, so the speed axis cannot
 separate these routes. 55 tests in total. The rest of the Deep
 scope is the v1.1 backlog in the repo, not claimed as done.
 
-Grades, house scale: Learn 8,700, Build 7,600, Deep 7,450 of
-10,000.
-
 If you optimize models: which do you trust first when a format
 gets smaller, the accuracy, the logit fidelity, or the byte
 count?

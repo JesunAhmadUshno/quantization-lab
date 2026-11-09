@@ -13,3 +13,4 @@ secrets/
 site/node_modules/
 site/dist/
 site/.rubric/
+level-*/artifacts/

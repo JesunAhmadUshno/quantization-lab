@@ -48,8 +48,7 @@ Present: v1.0 closes three levels on 2026-11-05. Learn quantized
 a deterministic teaching model. Build trained and quantized the
 MLP and added calibrated per-channel routes and magnitude
 pruning. Compressed Deep ran the quality against size against
-speed study over 10 routes. Grades on the house 10,000 scale:
-Learn 8,700, Build 7,600, Deep 7,450.
+speed study over 10 routes.
 
 Future: the rest of the v2 Deep scope is named in ROADMAP.md in
 the repo as the v1.1 backlog. It includes a real pretrained model,
@@ -79,7 +78,7 @@ symmetric per-tensor scales.
 | INT8 | 16 (3.0x smaller) | 0.003937 | 8 of 8 |
 | INT4 packed | 10 (4.8x smaller) | 0.071429 | 8 of 8 |
 
-Grade: 8,700 of 10,000. Tests: 23 unit tests, plus the scaffold
+Tests: 23 unit tests, plus the scaffold
 smoke test. The synthetic task saturates at 8 of 8 for every
 format; only the score MAE (INT8 0.002707, INT4 0.049107) shows
 the degradation at this level.
@@ -100,7 +99,7 @@ test 400.
 | Pruned 0.5 (NumPy equivalent) | 3013 | 350 of 400 (0.8750) | 0.533220 |
 | Pruned 0.7 (NumPy equivalent) | 3013 | 319 of 400 (0.7975) | 1.955935 |
 
-Grade: 7,600 of 10,000. Tests at this level: 20 new tests, 43 unit
+Tests at this level: 20 new tests, 43 unit
 tests in total with Learn.
 
 ### Level 3, Deep, compressed (release v1.0)
@@ -126,7 +125,7 @@ packed is the smallest-size route with a named accuracy and
 fidelity cost, and pruning in any form is not a size route until
 storage or recovery changes.
 
-Grade: 7,450 of 10,000. Tests at this level: 12 new tests, 55
+Tests at this level: 12 new tests, 55
 unit tests in total, plus the scaffold smoke test.
 
 ## Honest limits
