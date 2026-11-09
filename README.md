@@ -5,7 +5,7 @@ weight quantization and magnitude pruning cost in serialized size,
 accuracy and logit fidelity, and which route should be picked under a
 byte budget?
 
-**Headline.** On a 676-parameter NumPy MLP with synthetic data (not a real model), INT8 per-channel weight quantization kept FP32 test accuracy, 353 of 400 (Wilson 95% interval 0.847 to 0.910), at 1388 bytes, 2.17 times smaller than FP32; across 10 seeds neither INT8 route moved more than 2 of 400 samples from FP32 and none differed significantly (exact McNemar p < 0.05 in 0 of 10 seeds).
+**Headline.** On a 676-parameter NumPy MLP with synthetic data (not a real model), INT8 per-channel weight quantization kept FP32 test accuracy, 353 of 400 (Wilson 95% interval 0.847 to 0.910), at 1388 bytes, 2.17 times smaller than FP32; across 10 seeds neither INT8 route changed the number of correct test samples by more than 2 of 400 (net; at most 3 of 400 samples flipped) in any seed, and none differed significantly (exact McNemar p < 0.05 in 0 of 10 seeds).
 
 **Field.** ML and AI research. **Job family.** ML engineering, model
 optimization and inference.
