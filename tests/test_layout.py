@@ -2,9 +2,9 @@
 
 No lock test: the repo is not pre-registered (PROPOSAL.md), so there is no locked file to pin.
 """
-import glob
 import os
 import re
+import subprocess
 import sys
 import unittest
 
@@ -31,19 +31,23 @@ class TestLayout(unittest.TestCase):
             self.assertIn(field, text)
 
     def test_no_public_grade(self):
-        files = glob.glob(os.path.join(ROOT, "**", "*.md"), recursive=True) + \
-            glob.glob(os.path.join(ROOT, "site", "src", "*.jsx"))
+        # Every tracked text file, not only Markdown: a grade hid in a .py fixture once.
+        files = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True,
+                               check=True).stdout.split()
         hits = []
-        for path in files:
-            if "node_modules" in path:
-                continue
-            for n, line in enumerate(open(path, encoding="utf-8"), 1):
-                if GRADE.search(line):
-                    hits.append(f"{os.path.relpath(path, ROOT)}:{n}")
+        for rel in files:
+            try:
+                lines = open(os.path.join(ROOT, rel), encoding="utf-8").readlines()
+            except (UnicodeDecodeError, FileNotFoundError):
+                continue  # binary or deleted in the working tree
+            for n, line in enumerate(lines, 1):
+                if GRADE.search(line) and not line.startswith("GRADE = re.compile("):
+                    hits.append(f"{rel}:{n}")
         self.assertEqual(hits, [], "grades are internal: " + ", ".join(hits))
 
     def test_grade_pattern_catches_a_grade(self):
-        self.assertTrue(GRADE.search("Grade: 7,450 of 10,000 for this Deep level."))
+        # Synthetic value, built in pieces so this file does not trip its own scan.
+        self.assertTrue(GRADE.search("Gra" + "de: 1,234 of 10" + ",000"))
 
     def test_regeneration_check_flags_changes_and_skips_timing(self):
         old = {"rows": [{"test_correct": 353, "timing_batch_ms_median": 0.25, "logit_mse": 0.045583}],
