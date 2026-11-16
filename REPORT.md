@@ -60,8 +60,8 @@ not separate routes (H5).
 
 | ID | Result | Evidence |
 | --- | --- | --- |
-| H1 INT8 accuracy-neutral | CONFIRMED (on this model) | Both INT8 routes: p < 0.05 in 0 of 10 seeds; within -2 to +1 samples of FP32 |
-| H2 INT4 smallest, with an accuracy cost | PARTLY: smallest CONFIRMED (1081 bytes, 2.79x); accuracy cost INCONCLUSIVE | Accuracy loss not significant in any seed (seed 0 p = 0.0703); the cost shows in logit MSE (0.045583 against 0.000129 for INT8 per-channel) |
+| H1 INT8 accuracy-neutral | CONFIRMED (on this model) | Both INT8 routes: p < 0.05 in 0 of 10 seeds; net change in correct samples -2 to +1 against FP32 (at most 3 of 400 flipped) |
+| H2 INT4 smallest, with an accuracy cost | PARTLY: smallest CONFIRMED (1081 bytes, 2.79x); accuracy cost NOT MET | Pass line needs McNemar p < 0.05; it held in 0 of 10 seeds (seed 0 p = 0.0703), so this half is a miss. 400 test samples are underpowered to detect a cost this small; the cost shows in logit MSE (0.045583 against 0.000129 for INT8 per-channel) |
 | H3 Pruning alone not a size route; heavy pruning hurts | CONFIRMED | 3013 bytes at every sparsity; pruned 0.7 p < 0.05 in 10 of 10 seeds |
 | H4 Prune plus quantize does not stack size | CONFIRMED | Combined sizes 1388 and 1081 bytes equal their plain quantized routes |
 | H5 Speed separates routes | REFUTED on this setup | Batch medians 0.178 to 0.250 ms, every route runs the same dequantized NumPy pass; run-to-run spread of 0.178 to 0.315 ms for one route is stated in Appendix C but its raw timings are not kept in the repo |
