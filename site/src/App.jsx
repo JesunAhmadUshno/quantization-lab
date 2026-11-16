@@ -93,7 +93,7 @@ function Range({ label, value, min, max, step, onChange, show }) {
 export default function App() {
   useReveal();
   return (
-    <div className="wrap">
+    <div className="wrap"><a className="skip" href="#top">Skip to content</a>
       <MenuBar />
       <div className="glow" aria-hidden="true" />
       <Hero />
@@ -109,7 +109,7 @@ export default function App() {
         <p>Code: Apache-2.0 · <a href={REPO}>Repository</a> · <a href={`${REPO}/releases`}>Releases</a></p>
         <p>Reproduce: <code>python level-3-deep/run_deep.py</code> · <code>python level-3-deep/seed_study.py</code> · <code>python -m unittest discover -s tests</code></p>
         <p>Every number on this page is read from <code>level-*/results_*.json</code> at build time; the quantizer, decision rule and intervals are computed in your browser.</p>
-      </footer>
+      <nav className="support" aria-label="Support this work"><a href="https://github.com/sponsors/JesunAhmadUshno">Sponsor this work</a><a href="https://github.com/sponsors/JesunAhmadUshno">Donate</a><a href="https://buymeacoffee.com/jesun">Buy Me a Coffee</a><a href="https://calendly.com/jesunahmadushno/30min">Work with me</a></nav></footer>
     </div>
   );
 }
@@ -122,7 +122,7 @@ function Hero() {
     { r: i4, cap: `INT4 packed, ${i4.test_correct} of ${i4.test_total}, the smallest route` },
   ];
   return (
-    <header className="card hero window" id="top" data-title="quantlab — README">
+    <header className="card hero window" id="top" data-title="quantlab - README">
       <div className="head">
         <p className="eyebrow">Quality · size · speed study · {ROWS.length} routes</p>
         <span className="pill good">● Every number from results JSON</span>
@@ -178,7 +178,7 @@ function Quantizer() {
   const y = (v) => pad.t + (1 - (v + lim) / (2 * lim)) * (H - pad.t - pad.b);
   const levels = Array.from({ length: 2 * q.qmax + 1 }, (_, k) => (k - q.qmax) * q.scale);
   return (
-    <section id="quantize" className="card window reveal" data-title="quantize.py — live in your browser">
+    <section id="quantize" className="card window reveal" data-title="quantize.py - live in your browser">
       <div className="head">
         <div>
           <p className="eyebrow">Live playground · Learn level</p>
@@ -285,7 +285,7 @@ function Routes() {
     );
   };
   return (
-    <section id="routes" className="card window reveal" data-title="results_deep.json — recorded replay">
+    <section id="routes" className="card window reveal" data-title="results_deep.json - recorded replay">
       <div className="head">
         <div>
           <p className="eyebrow">Route explorer · recorded</p>
@@ -349,7 +349,7 @@ function Decision() {
   const strict = recommendRoute(ROWS, { maxSize, minAccuracy: minAcc - 1e-12, maxBatchMs: maxMs });
   const budgetMode = maxSize <= BUDGET;
   return (
-    <section id="decide" className="card window reveal" data-title="recommend_route — live">
+    <section id="decide" className="card window reveal" data-title="recommend_route - live">
       <div className="head">
         <div>
           <p className="eyebrow">Decision rule · computed live</p>
@@ -413,7 +413,7 @@ function Noise() {
   const mc = seeds.canonical.mcnemar, sm = seeds.summary, dc = seeds.decision_counts;
   const worse = ivs.filter((d) => d.ci[1] < fpCi[0]);
   return (
-    <section id="noise" className="card window reveal" data-title="noise.check — Wilson 95% · seed study">
+    <section id="noise" className="card window reveal" data-title="noise.check - Wilson 95% · seed study">
       <p className="eyebrow">Uncertainty · derived statistics</p>
       <h2>At {N_TEST} test samples, most gaps are <em>inside the noise</em>.</h2>
       <p className="sub">
@@ -473,7 +473,7 @@ function Pruning() {
   const rows = ROWS.filter((r) => r.variant === 'fp32' || /^pruned_[\d.]+$/.test(r.variant)).map((r) => ({ r, s: r.sparsity ?? 0 }));
   const maxMse = Math.max(...rows.map((d) => d.r.logit_mse_vs_fp32));
   return (
-    <section id="prune" className="card window reveal" data-title="prune.log — recorded">
+    <section id="prune" className="card window reveal" data-title="prune.log - recorded">
       <p className="eyebrow">Pruning reality · recorded</p>
       <h2>Accuracy hides the damage. The <em>logits</em> don&apos;t.</h2>
       <p className="sub">
@@ -510,7 +510,7 @@ function Levels() {
     ['Deep', `${ROWS.length} routes, Pareto + decision rule`, `${deep.verdict_inputs.pareto_routes.length} Pareto routes; smallest is ${routeName(deep.verdict_inputs.smallest_route)} at ${fmt(BY[deep.verdict_inputs.smallest_route].size_bytes)} B.`, 'REPORT.md'],
   ];
   return (
-    <section id="levels" className="card window reveal" data-title="levels/ — Learn · Build · Deep">
+    <section id="levels" className="card window reveal" data-title="levels/ - Learn · Build · Deep">
       <p className="eyebrow">Build ladder</p>
       <h2>Three levels, each one <em>reusing</em> the last by import.</h2>
       <ol className="steps" style={{ marginTop: 16 }}>
@@ -557,7 +557,7 @@ function Limits() {
     ['Activation and asymmetric quantization; GPTQ and AWQ rows', 'Weight-only symmetric round-to-nearest is all that is measured here.'],
   ];
   return (
-    <section id="limits" className="card window reveal" data-title="REPORT.md — limits and v1.1 backlog">
+    <section id="limits" className="card window reveal" data-title="REPORT.md - limits and v1.1 backlog">
       <p className="eyebrow">Limits and roadmap</p>
       <h2>What this study <em>cannot</em> tell you.</h2>
       <p className="sub">One {PARAMS}-parameter MLP on synthetic Gaussian-mixture data, fake quantization on CPU, weights only. It shows the shape of a quantization study, not numbers that transfer to LLMs.</p>
